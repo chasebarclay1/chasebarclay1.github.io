@@ -6,109 +6,206 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ─────────────────────────────────────────────
-   PARTICLE BACKGROUND CANVAS
+   PCB CIRCUIT BACKGROUND (static, drawn once)
 ───────────────────────────────────────────── */
 (function () {
   const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles, animId;
+  const ctx    = canvas.getContext('2d');
 
-  const PARTICLE_COUNT = 80;
-  const MAX_DIST = 130;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+  // Tiny seeded PRNG so the layout is identical on every page load
+  function makePRNG(seed) {
+    let s = seed >>> 0;
+    return () => { s = (Math.imul(1664525, s) + 1013904223) >>> 0; return s / 4294967296; };
   }
 
-  function createParticle() {
-    return {
-      x:  Math.random() * W,
-      y:  Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      r:  Math.random() * 1.8 + 0.6,
-    };
-  }
-
-  function init() {
-    resize();
-    particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
-  }
-
-  function draw() {
+  function drawPCB() {
+    const W = canvas.width  = window.innerWidth;
+    const H = canvas.height = window.innerHeight;
     ctx.clearRect(0, 0, W, H);
 
-    // Lines between close particles
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MAX_DIST) {
-          const alpha = (1 - dist / MAX_DIST) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
+    const rng = makePRNG(0xC0FFEE42);
+    const G   = 34;                          // grid cell size (px)
+    const cols = Math.ceil(W / G) + 1;
+    const rows = Math.ceil(H / G) + 1;
+
+    // ── Subtle grid of dot markers ──────────────────────────────────
+    for (let r = 0; r <= rows; r++) {
+      for (let c = 0; c <= cols; c++) {
+        ctx.beginPath();
+        ctx.arc(c * G, r * G, 0.7, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.06)';
+        ctx.fill();
+      }
+    }
+
+    // ── Build horizontal trace segments ─────────────────────────────
+    const hTraces = []; // { r, c0, c1, thick }
+    for (let r = 0; r <= rows; r++) {
+      let c = 0;
+      while (c < cols) {
+        if (rng() < 0.38) {
+          const len   = Math.floor(rng() * 7) + 2;
+          const thick = rng() < 0.18;
+          hTraces.push({ r, c0: c, c1: Math.min(c + len, cols), thick });
+          c += len + Math.floor(rng() * 3) + 1;
+        } else {
+          c++;
         }
       }
     }
 
-    // Dots
-    particles.forEach(p => {
+    // ── Build vertical trace segments ───────────────────────────────
+    const vTraces = []; // { c, r0, r1, thick }
+    for (let c = 0; c <= cols; c++) {
+      let r = 0;
+      while (r < rows) {
+        if (rng() < 0.38) {
+          const len   = Math.floor(rng() * 7) + 2;
+          const thick = rng() < 0.18;
+          vTraces.push({ c, r0: r, r1: Math.min(r + len, rows), thick });
+          r += len + Math.floor(rng() * 3) + 1;
+        } else {
+          r++;
+        }
+      }
+    }
+
+    // ── Draw traces ─────────────────────────────────────────────────
+    ctx.lineCap = 'square';
+    hTraces.forEach(t => {
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 212, 255, 0.35)';
-      ctx.fill();
+      ctx.moveTo(t.c0 * G, t.r * G);
+      ctx.lineTo(t.c1 * G, t.r * G);
+      ctx.strokeStyle = t.thick ? 'rgba(0,212,255,0.09)' : 'rgba(0,212,255,0.045)';
+      ctx.lineWidth   = t.thick ? 2.5 : 1;
+      ctx.stroke();
     });
-  }
-
-  function update() {
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0 || p.x > W) p.vx *= -1;
-      if (p.y < 0 || p.y > H) p.vy *= -1;
+    vTraces.forEach(t => {
+      ctx.beginPath();
+      ctx.moveTo(t.c * G, t.r0 * G);
+      ctx.lineTo(t.c * G, t.r1 * G);
+      ctx.strokeStyle = t.thick ? 'rgba(0,212,255,0.09)' : 'rgba(0,212,255,0.045)';
+      ctx.lineWidth   = t.thick ? 2.5 : 1;
+      ctx.stroke();
     });
-  }
 
-  function loop() {
-    update();
-    draw();
-    animId = requestAnimationFrame(loop);
-  }
+    // ── Collect via candidates (trace endpoints + junctions) ────────
+    const viaMap = new Map(); // key → count (junctions get higher count)
+    const mark = key => viaMap.set(key, (viaMap.get(key) || 0) + 1);
+    hTraces.forEach(t => { mark(`${t.c0},${t.r}`); mark(`${t.c1},${t.r}`); });
+    vTraces.forEach(t => { mark(`${t.c},${t.r0}`); mark(`${t.c},${t.r1}`); });
 
-  // Mouse interaction — push particles
-  let mouse = { x: -9999, y: -9999 };
-  window.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-    particles.forEach(p => {
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 100) {
-        const force = (100 - dist) / 100;
-        p.vx += (dx / dist) * force * 0.3;
-        p.vy += (dy / dist) * force * 0.3;
-        // Cap speed
-        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        if (speed > 2.5) { p.vx *= 2.5 / speed; p.vy *= 2.5 / speed; }
+    // ── Draw vias ───────────────────────────────────────────────────
+    viaMap.forEach((count, key) => {
+      if (rng() > 0.55) return;           // sparse – not every endpoint
+      const [c, r] = key.split(',').map(Number);
+      const x = c * G, y = r * G;
+      const junction = count > 1;
+
+      if (junction || rng() < 0.35) {
+        // Through-hole via: outer annular ring + drill hole
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0,212,255,0.14)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0,212,255,0.25)';
+        ctx.fill();
+      } else {
+        // SMD pad dot
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0,212,255,0.16)';
+        ctx.fill();
       }
     });
-  });
 
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(animId);
-    init();
-    loop();
-  });
+    // ── IC component outlines ───────────────────────────────────────
+    const numICs = Math.max(4, Math.floor(W * H / 160000));
+    const PREFIXES = ['U', 'IC', 'U', 'MCU', 'FPGA', 'DSP', 'U'];
+    for (let i = 0; i < numICs; i++) {
+      const cg = Math.floor(rng() * (cols - 7)) + 2;
+      const rg = Math.floor(rng() * (rows - 7)) + 2;
+      const wg = Math.floor(rng() * 3) + 2;
+      const hg = Math.floor(rng() * 2) + 2;
+      const x  = cg * G,  y  = rg * G;
+      const w  = wg * G,  h  = hg * G;
 
-  init();
-  loop();
+      // Body
+      ctx.strokeStyle = 'rgba(0,212,255,0.07)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, w, h);
+
+      // Pin-1 notch (arc on top edge)
+      ctx.beginPath();
+      ctx.arc(x + w / 2, y, G * 0.22, Math.PI, 0);
+      ctx.strokeStyle = 'rgba(0,212,255,0.07)';
+      ctx.stroke();
+
+      // Pins along top & bottom
+      const pinsWide = wg;
+      for (let p = 0; p < pinsWide; p++) {
+        const px = x + G * 0.5 + p * G;
+        ctx.fillStyle = 'rgba(0,212,255,0.08)';
+        ctx.fillRect(px - 3, y - 7,  6, 7);   // top
+        ctx.fillRect(px - 3, y + h,  6, 7);   // bottom
+      }
+      // Pins along left & right
+      const pinsTall = hg;
+      for (let p = 0; p < pinsTall; p++) {
+        const py = y + G * 0.5 + p * G;
+        ctx.fillStyle = 'rgba(0,212,255,0.08)';
+        ctx.fillRect(x - 7,  py - 3, 7, 6);   // left
+        ctx.fillRect(x + w,  py - 3, 7, 6);   // right
+      }
+
+      // Reference designator
+      const ref = PREFIXES[Math.floor(rng() * PREFIXES.length)];
+      ctx.font         = 'bold 9px "JetBrains Mono", monospace';
+      ctx.fillStyle    = 'rgba(0,212,255,0.10)';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`${ref}${Math.floor(rng() * 20) + 1}`, x + w / 2, y + h / 2);
+    }
+
+    // ── Passive components (resistors / capacitors) ─────────────────
+    const numPassive = Math.max(8, Math.floor(W * H / 75000));
+    for (let i = 0; i < numPassive; i++) {
+      const cg    = Math.floor(rng() * (cols - 3)) + 1;
+      const rg    = Math.floor(rng() * (rows - 3)) + 1;
+      const x     = cg * G,  y  = rg * G;
+      const horiz = rng() < 0.5;
+      const bw    = G * 0.95, bh = G * 0.44;
+
+      ctx.strokeStyle = 'rgba(0,212,255,0.07)';
+      ctx.lineWidth   = 1;
+
+      if (horiz) {
+        ctx.strokeRect(x - bw / 2, y - bh / 2, bw, bh);
+        ctx.beginPath();
+        ctx.moveTo(x - bw / 2 - G * 0.38, y);
+        ctx.lineTo(x - bw / 2, y);
+        ctx.moveTo(x + bw / 2, y);
+        ctx.lineTo(x + bw / 2 + G * 0.38, y);
+        ctx.strokeStyle = 'rgba(0,212,255,0.05)';
+        ctx.stroke();
+      } else {
+        ctx.strokeRect(x - bh / 2, y - bw / 2, bh, bw);
+        ctx.beginPath();
+        ctx.moveTo(x, y - bw / 2 - G * 0.38);
+        ctx.lineTo(x, y - bw / 2);
+        ctx.moveTo(x, y + bw / 2);
+        ctx.lineTo(x, y + bw / 2 + G * 0.38);
+        ctx.strokeStyle = 'rgba(0,212,255,0.05)';
+        ctx.stroke();
+      }
+    }
+  }
+
+  window.addEventListener('resize', drawPCB);
+  drawPCB();
 })();
 
 /* ─────────────────────────────────────────────
