@@ -282,16 +282,15 @@ body.cursor-hover #cursor-follower {
 .carousel-track {
   display: inline-flex;
   gap: 2rem;
-  padding-right: var(
-    --padding-x
-  ); /* Ensure right padding allows last item to be centered */
+  padding-left: var(--padding-x);
+  padding-right: var(--padding-x);
 }
 
 .project-card {
   position: relative;
   flex: 0 0 auto;
-  width: clamp(300px, 40vw, 450px);
-  aspect-ratio: 4/5;
+  width: clamp(260px, 32vw, 380px);
+  aspect-ratio: 3/2;
   border-radius: var(--radius-lg);
   background: var(--bg-card);
   border: 1px solid var(--border);
