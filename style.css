@@ -216,14 +216,14 @@ body.cursor-hover #cursor-dot {
 
 .hero-portrait {
   position: absolute;
-  width: clamp(110px, 18vw, 240px);
-  height: clamp(110px, 18vw, 240px);
+  width: clamp(165px, 27vw, 360px);
+  height: clamp(165px, 27vw, 360px);
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255,255,255,0.12);
   top: 50%;
   transform: translateY(-50%);
-  right: 0;
+  right: 12%;
   z-index: 2;
   opacity: 0;
   transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
