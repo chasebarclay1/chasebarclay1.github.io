@@ -223,7 +223,7 @@ body.cursor-hover #cursor-dot {
   border: 2px solid rgba(255,255,255,0.12);
   top: 50%;
   transform: translateY(-50%);
-  right: 5%;
+  right: -10%;
   z-index: 2;
   opacity: 0;
   transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
