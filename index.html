@@ -37,13 +37,25 @@
     <!-- Hero -->
     <section id="hero">
       <div class="hero-content">
-        <h1 class="hero-line hero-line-chase">
-          <span class="word">CHASE</span>
-          <div class="hero-portrait reveal">
+        <div class="hero-text-block">
+          <!-- Photo circle (absolutely positioned, spanning both lines) -->
+          <div class="hero-portrait" id="hero-portrait">
             <img src="photo.jpg" alt="Chase Barclay" />
           </div>
-        </h1>
-        <h1 class="hero-line hero-line-barclay"><span class="word">BARCLAY</span></h1>
+
+          <!-- CHASE line wrapper -->
+          <div class="hero-line-wrap" id="wrap-chase">
+            <h1 class="hero-line hero-line-chase"><span class="word">CHASE</span></h1>
+            <h1 class="hero-line hero-line-chase-inv" id="line-chase-inv" aria-hidden="true">CHASE</h1>
+          </div>
+
+          <!-- BARCLAY line wrapper -->
+          <div class="hero-line-wrap" id="wrap-barclay">
+            <h1 class="hero-line hero-line-barclay"><span class="word">BARCLAY</span></h1>
+            <h1 class="hero-line hero-line-barclay-inv" id="line-barclay-inv" aria-hidden="true">BARCLAY</h1>
+          </div>
+        </div>
+
         <div class="hero-meta">
           <p class="hero-role reveal">Computer Engineer</p>
           <p class="hero-loc reveal">@ Georgia Institute of Technology</p>

@@ -133,6 +133,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 function animateHero() {
   const lines = document.querySelectorAll('.hero-line .word');
   const contactWords = document.querySelectorAll('.contact-heading .word');
+  const portrait = document.getElementById('hero-portrait');
   let delay = 0;
 
   lines.forEach((w) => {
@@ -140,6 +141,9 @@ function animateHero() {
     setTimeout(() => w.classList.add('in'), d);
     delay += 180;
   });
+
+  // Fade in portrait with the text
+  if (portrait) setTimeout(() => portrait.classList.add('visible'), 120);
 
   delay += 120;
   const heroMeta = document.querySelectorAll('.hero-meta .reveal');
@@ -256,4 +260,35 @@ function initReveal() {
     },
     { passive: true }
   );
+})();
+
+/* ── Hero Text / Photo Clip-Path Inversion ── */
+(function () {
+  const portrait = document.getElementById('hero-portrait');
+  const chaseInv = document.getElementById('line-chase-inv');
+  const barclayInv = document.getElementById('line-barclay-inv');
+  if (!portrait || !chaseInv || !barclayInv) return;
+
+  function updateClip() {
+    const pr = portrait.getBoundingClientRect();
+    const cx = pr.left + pr.width / 2;
+    const cy = pr.top + pr.height / 2;
+    const radius = pr.width / 2;
+
+    // CHASE inverted layer
+    const cw = chaseInv.parentElement.getBoundingClientRect();
+    const chaseCP = `circle(${radius}px at ${cx - cw.left}px ${cy - cw.top}px)`;
+    chaseInv.style.clipPath = chaseCP;
+
+    // BARCLAY inverted layer
+    const bw = barclayInv.parentElement.getBoundingClientRect();
+    const barclayCP = `circle(${radius}px at ${cx - bw.left}px ${cy - bw.top}px)`;
+    barclayInv.style.clipPath = barclayCP;
+  }
+
+  // Run after layout settles
+  window.addEventListener('load', () => requestAnimationFrame(updateClip));
+  window.addEventListener('resize', updateClip);
+  // Also update during scroll since hero has parallax
+  window.addEventListener('scroll', updateClip, { passive: true });
 })();
