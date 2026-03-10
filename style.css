@@ -217,9 +217,10 @@ body.cursor-hover #cursor-dot {
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255,255,255,0.12);
-  vertical-align: middle;
   margin-left: 0.3em;
   flex-shrink: 0;
+  /* Nudge down to visually center with uppercase text baseline */
+  transform: translateY(6%);
 }
 
 .hero-portrait img {
