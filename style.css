@@ -216,8 +216,8 @@ body.cursor-hover #cursor-dot {
 
 .hero-portrait {
   position: absolute;
-  width: clamp(165px, 27vw, 360px);
-  height: clamp(165px, 27vw, 360px);
+  width: clamp(248px, 40vw, 540px);
+  height: clamp(248px, 40vw, 540px);
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255,255,255,0.12);
