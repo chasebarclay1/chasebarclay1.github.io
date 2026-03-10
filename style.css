@@ -228,7 +228,7 @@ body.cursor-hover #cursor-dot {
   height: 105%;
   margin: -2.5%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 0%;
 }
 
 .hero-line {
