@@ -224,9 +224,9 @@ body.cursor-hover #cursor-dot {
 }
 
 .hero-portrait img {
-  width: 130%;
-  height: 130%;
-  margin: -15%;
+  width: 115%;
+  height: 115%;
+  margin: -7.5%;
   object-fit: cover;
   object-position: center 0%;
 }
