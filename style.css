@@ -211,12 +211,15 @@ body.cursor-hover #cursor-dot {
 }
 
 .hero-portrait {
-  width: 120px;
-  height: 120px;
+  display: inline-block;
+  width: clamp(70px, 10vw, 130px);
+  height: clamp(70px, 10vw, 130px);
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 2.5rem;
   border: 2px solid rgba(255,255,255,0.12);
+  vertical-align: middle;
+  margin-left: 0.3em;
+  flex-shrink: 0;
 }
 
 .hero-portrait img {
@@ -235,7 +238,12 @@ body.cursor-hover #cursor-dot {
   color: #fff;
 }
 
-.hero-line:nth-child(2) {
+.hero-line-chase {
+  display: flex;
+  align-items: center;
+}
+
+.hero-line-barclay {
   color: transparent;
   -webkit-text-stroke: 2px rgba(255,255,255,0.35);
 }
