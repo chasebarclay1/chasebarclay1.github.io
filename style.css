@@ -649,12 +649,13 @@ footer p {
   .hero-portrait {
     width: clamp(180px, 50vw, 280px);
     height: clamp(180px, 50vw, 280px);
-    right: -25%;
+    right: -5%;
   }
   #hero {
-    min-height: auto;
-    padding-top: 30vh;
-    padding-bottom: 4vh;
+    align-items: center;
+    padding-top: 100px;
+    padding-bottom: 5vh;
+    min-height: 100svh;
   }
   .project-row {
     grid-template-columns: 1fr;
@@ -695,6 +696,6 @@ footer p {
   .hero-portrait {
     width: clamp(140px, 45vw, 220px);
     height: clamp(140px, 45vw, 220px);
-    right: -30%;
+    right: -5%;
   }
 }
