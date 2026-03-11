@@ -701,7 +701,7 @@ footer p {
   .nav-links { gap: 1.25rem; }
 }
 
-@media (max-width: 1100px) {
+@media (min-width: 769px) and (max-width: 1100px) {
   .hero-portrait {
     right: -20%;
   }
