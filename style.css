@@ -651,6 +651,11 @@ footer p {
     height: clamp(180px, 50vw, 280px);
     right: -25%;
   }
+  #hero {
+    min-height: auto;
+    padding-top: 30vh;
+    padding-bottom: 4vh;
+  }
   .project-row {
     grid-template-columns: 1fr;
     gap: 0.5rem;
