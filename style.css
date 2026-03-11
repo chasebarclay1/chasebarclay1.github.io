@@ -661,8 +661,8 @@ footer p {
     top: auto;
     right: auto;
     transform: none;
-    width: clamp(140px, 42vw, 240px);
-    height: clamp(140px, 42vw, 240px);
+    width: clamp(200px, 60vw, 340px);
+    height: clamp(200px, 60vw, 340px);
     align-self: flex-end;
     margin-bottom: 0.3em;
     opacity: 1;
@@ -709,7 +709,7 @@ footer p {
 
 @media (max-width: 480px) {
   .hero-portrait {
-    width: clamp(120px, 38vw, 180px);
-    height: clamp(120px, 38vw, 180px);
+    width: clamp(180px, 55vw, 280px);
+    height: clamp(180px, 55vw, 280px);
   }
 }
