@@ -672,11 +672,6 @@ footer p {
     position: relative;
     z-index: 1;
   }
-  /* hide clip-path inversion on mobile — layout change makes it irrelevant */
-  .hero-line-chase-inv,
-  .hero-line-barclay-inv {
-    display: none;
-  }
   .project-row {
     grid-template-columns: 1fr;
     gap: 0.5rem;
