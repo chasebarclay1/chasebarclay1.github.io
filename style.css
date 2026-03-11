@@ -647,9 +647,9 @@ footer p {
     -webkit-text-stroke-width: 1.2px;
   }
   #hero {
-    align-items: flex-start;
-    padding-top: 120px;
-    padding-bottom: 6vh;
+    align-items: flex-end;
+    padding-top: 0;
+    padding-bottom: 4vh;
     min-height: 100svh;
   }
   .hero-text-block {
@@ -661,11 +661,16 @@ footer p {
     top: auto;
     right: auto;
     transform: none;
-    width: clamp(200px, 60vw, 340px);
-    height: clamp(200px, 60vw, 340px);
+    width: 80vw;
+    height: 80vw;
     align-self: flex-end;
-    margin-bottom: 0.3em;
+    margin-bottom: -10vw; /* text overlaps bottom of photo */
+    z-index: 0;
     opacity: 1;
+  }
+  .hero-line-wrap {
+    position: relative;
+    z-index: 1;
   }
   /* hide clip-path inversion on mobile — layout change makes it irrelevant */
   .hero-line-chase-inv,
@@ -709,7 +714,7 @@ footer p {
 
 @media (max-width: 480px) {
   .hero-portrait {
-    width: clamp(180px, 55vw, 280px);
-    height: clamp(180px, 55vw, 280px);
+    width: 70vw;
+    height: 70vw;
   }
 }
