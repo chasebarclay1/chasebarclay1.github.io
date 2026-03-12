@@ -292,3 +292,60 @@ function initReveal() {
   // Also update during scroll since hero has parallax
   window.addEventListener('scroll', updateClip, { passive: true });
 })();
+
+/* ── Marquee Mouse Scrub ── */
+(function () {
+  const marquee = document.querySelector('.marquee');
+  const track = document.querySelector('.marquee-track');
+  if (!marquee || !track) return;
+
+  let offset = 0;          // current translateX in px
+  let velocity = 0;        // px per frame driven by mouse
+  let isHovering = false;
+  let raf;
+
+  // Base auto-scroll speed (px/frame)
+  const BASE_SPEED = 0.5;
+
+  function getTrackHalf() {
+    return track.scrollWidth / 2;
+  }
+
+  function tick() {
+    if (isHovering) {
+      offset += velocity;
+    } else {
+      offset += BASE_SPEED;
+    }
+    // Wrap seamlessly at the halfway point
+    const half = getTrackHalf();
+    if (offset >= half) offset -= half;
+    if (offset < 0) offset += half;
+
+    track.style.transform = `translateX(${-offset}px)`;
+    raf = requestAnimationFrame(tick);
+  }
+
+  marquee.addEventListener('mouseenter', () => {
+    isHovering = true;
+    // Stop CSS animation, take over with JS
+    track.style.animationPlayState = 'paused';
+  });
+
+  marquee.addEventListener('mouseleave', () => {
+    isHovering = false;
+    track.style.animationPlayState = 'paused'; // keep JS in control
+  });
+
+  marquee.addEventListener('mousemove', (e) => {
+    const rect = marquee.getBoundingClientRect();
+    // Normalise mouse X: -1 (far left) → +1 (far right), 0 = center = pause
+    const norm = (e.clientX - rect.left) / rect.width * 2 - 1;
+    // Max speed ~4px/frame
+    velocity = norm * 4;
+  });
+
+  // Kick off JS-driven loop immediately (replaces CSS animation)
+  track.style.animation = 'none';
+  raf = requestAnimationFrame(tick);
+})();
