@@ -7,10 +7,12 @@
 :root {
   --bg: #000;
   --text: #fff;
-  --muted: #666;
-  --muted-light: rgba(255,255,255,0.45);
-  --border: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(255, 255, 255, 0.25);
+  --muted: #888;
+  --muted-light: rgba(255,255,255,0.5);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(255, 255, 255, 0.28);
+  --card-bg: #0c0c0c;
+  --section-alt: rgba(255, 255, 255, 0.018);
   --font-h: 'Inter Tight', -apple-system, sans-serif;
   --font-b: 'Inter', -apple-system, sans-serif;
   --max-w: 1100px;
@@ -380,6 +382,36 @@ body.cursor-hover #cursor-dot {
 }
 
 /* ─────────────────────────────────────
+   Film Grain
+───────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: -100%;
+  width: 400%;
+  height: 400%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 9997;
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-3%, -4%); }
+  20%  { transform: translate(2%, 5%); }
+  30%  { transform: translate(-5%, 2%); }
+  40%  { transform: translate(4%, -3%); }
+  50%  { transform: translate(-2%, 4%); }
+  60%  { transform: translate(3%, -5%); }
+  70%  { transform: translate(-4%, 3%); }
+  80%  { transform: translate(5%, -2%); }
+  90%  { transform: translate(-3%, 5%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ─────────────────────────────────────
    Marquee
 ───────────────────────────────────── */
 .marquee {
@@ -388,6 +420,8 @@ body.cursor-hover #cursor-dot {
   border-bottom: 1px solid var(--border);
   padding: 1.4rem 0;
   white-space: nowrap;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }
 
 .marquee-track {
@@ -482,7 +516,7 @@ body.cursor-hover #cursor-dot {
   letter-spacing: -0.05em;
   text-transform: uppercase;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.18);
+  -webkit-text-stroke: 1px rgba(255,255,255,0.22);
   white-space: nowrap;
   will-change: transform;
   transition: transform 0.05s linear;
@@ -496,8 +530,10 @@ body.cursor-hover #cursor-dot {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.4);
   margin-bottom: 3rem;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(255,255,255,0.2);
 }
 
 /* ─────────────────────────────────────
@@ -505,6 +541,7 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #skills {
   padding: var(--py) 0;
+  background: var(--section-alt);
 }
 
 .skills-grid {
@@ -517,6 +554,7 @@ body.cursor-hover #cursor-dot {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.75rem 2rem;
+  background: var(--card-bg);
   transition: border-color 0.4s, background 0.4s;
 }
 
@@ -673,6 +711,7 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #experience {
   padding: var(--py) 0;
+  background: var(--section-alt);
 }
 
 .exp-list {
@@ -686,6 +725,7 @@ body.cursor-hover #cursor-dot {
   border-left: 2px solid rgba(255,255,255,0.07);
   border-radius: var(--radius);
   padding: 2rem 2.25rem;
+  background: var(--card-bg);
   transition: border-color 0.4s, background 0.4s, border-left-color 0.4s, box-shadow 0.4s;
 }
 
@@ -765,6 +805,7 @@ body.cursor-hover #cursor-dot {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2rem 2.25rem;
+  background: var(--card-bg);
   transition: border-color 0.4s, background 0.4s;
 }
 
@@ -828,6 +869,7 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #leadership {
   padding: var(--py) 0;
+  background: var(--section-alt);
 }
 
 .lead-list {
@@ -881,6 +923,7 @@ body.cursor-hover #cursor-dot {
   justify-content: center;
   text-align: center;
   padding: var(--py) var(--px);
+  background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(255,255,255,0.05) 0%, transparent 70%);
 }
 
 .contact-inner {
