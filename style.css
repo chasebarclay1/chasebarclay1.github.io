@@ -538,13 +538,13 @@ body.cursor-hover #cursor-dot {
   border-radius: var(--radius);
   padding: 1.75rem 2rem;
   background: var(--card-bg);
-  transition: border-color 0.4s, background 0.4s;
+  transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
 }
 
 .skill-card:hover {
   border-color: var(--border-hover);
-  background: rgba(255,255,255,0.025);
-  box-shadow: 0 8px 50px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  box-shadow: 0 8px 40px rgba(56, 189, 248, 0.06);
 }
 
 .skill-card-title {
@@ -604,9 +604,10 @@ body.cursor-hover #cursor-dot {
 }
 
 .project-row:hover {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.02);
   padding-left: 2rem;
-  border-color: rgba(255,255,255,0.18);
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 40px rgba(56, 189, 248, 0.06);
 }
 
 .project-num {
@@ -788,12 +789,13 @@ body.cursor-hover #cursor-dot {
   border-radius: var(--radius);
   padding: 2rem 2.25rem;
   background: var(--card-bg);
-  transition: border-color 0.4s, background 0.4s;
+  transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
 }
 
 .edu-card:hover {
   border-color: var(--border-hover);
   background: rgba(255,255,255,0.02);
+  box-shadow: 0 8px 40px rgba(56, 189, 248, 0.06);
 }
 
 .edu-card-top {
@@ -868,12 +870,13 @@ body.cursor-hover #cursor-dot {
   padding: 2rem 1rem;
   border-bottom: 1px solid var(--border);
   border-radius: 4px;
-  transition: background 0.4s, padding-left 0.4s;
+  transition: background 0.4s, padding-left 0.4s, box-shadow 0.4s;
 }
 
 .lead-row:hover {
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.02);
   padding-left: 2rem;
+  box-shadow: 0 8px 40px rgba(56, 189, 248, 0.06);
 }
 
 .lead-info h3 {
