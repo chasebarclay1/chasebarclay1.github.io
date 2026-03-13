@@ -27,6 +27,8 @@ html { scroll-behavior: smooth; background: var(--bg); }
 
 body {
   background: var(--bg);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+  background-size: 32px 32px;
   color: var(--text);
   font-family: var(--font-b);
   font-size: 16px;
@@ -34,6 +36,16 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   cursor: none;
+}
+
+/* top-of-page depth glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 110% 55% at 50% -5%, rgba(56, 189, 248, 0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 @media (pointer: coarse) {
@@ -498,11 +510,11 @@ body.cursor-hover #cursor-dot {
    Section Labels
 ───────────────────────────────────── */
 .section-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
+  color: var(--accent);
   margin-bottom: 3rem;
   padding-left: 1rem;
   border-left: 2px solid var(--accent-dim);
@@ -513,7 +525,6 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #skills {
   padding: var(--py) 0;
-  background: var(--section-alt);
 }
 
 .skills-grid {
@@ -683,7 +694,6 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #experience {
   padding: var(--py) 0;
-  background: var(--section-alt);
 }
 
 .exp-list {
@@ -841,7 +851,6 @@ body.cursor-hover #cursor-dot {
 ───────────────────────────────────── */
 #leadership {
   padding: var(--py) 0;
-  background: var(--section-alt);
 }
 
 .lead-list {
