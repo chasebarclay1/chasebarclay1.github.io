@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chase Barclay — Computer Engineer</title>
-    <link rel="stylesheet" href="style.css?v=8" />
+    <meta name="description" content="Chase Barclay — Computer Engineer at Georgia Tech. VLSI, embedded systems, robotics, and hardware design." />
+    <link rel="stylesheet" href="style.css?v=10" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,10 +15,10 @@
   </head>
   <body>
     <!-- Effects -->
+    <div id="scroll-progress" aria-hidden="true"></div>
     <div id="glow" aria-hidden="true"></div>
     <div id="cursor-dot" aria-hidden="true"></div>
     <div id="loader" aria-hidden="true"><div class="loader-bar"></div></div>
-    <canvas id="pcb-bg" aria-hidden="true"></canvas>
 
     <!-- Floating project preview (positioned by JS) -->
     <div id="project-preview" aria-hidden="true">
@@ -28,6 +29,9 @@
     <nav id="navbar">
       <a href="#hero" class="nav-name">Chase Barclay</a>
       <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Work</a>
+        <a href="#experience">Experience</a>
         <a href="https://www.linkedin.com/in/chasebarclay/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://github.com/chasebarclay1" target="_blank" rel="noopener">GitHub</a>
         <a href="mailto:chaser.barclay@gmail.com">Email</a>
@@ -38,7 +42,7 @@
     <section id="hero">
       <div class="hero-content">
         <div class="hero-text-block">
-          <!-- Photo circle (absolutely positioned, spanning both lines) -->
+          <!-- Photo circle -->
           <div class="hero-portrait" id="hero-portrait">
             <img src="photo.jpg" alt="Chase Barclay" />
           </div>
@@ -60,6 +64,11 @@
           <p class="hero-role reveal">Computer Engineer</p>
           <p class="hero-loc reveal">@ Georgia Institute of Technology</p>
         </div>
+
+        <div class="hero-scroll-hint reveal" aria-hidden="true">
+          <span class="scroll-line"></span>
+          <span class="scroll-label">scroll</span>
+        </div>
       </div>
     </section>
 
@@ -67,7 +76,7 @@
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
         <span>HARDWARE</span><span class="dot">·</span>
-        <span>SOFTWARE</span><span class="dot">·</span>
+        <span>SYSTEMVERILOG</span><span class="dot">·</span>
         <span>EMBEDDED</span><span class="dot">·</span>
         <span>VLSI</span><span class="dot">·</span>
         <span>ROBOTICS</span><span class="dot">·</span>
@@ -76,8 +85,18 @@
         <span>TINYML</span><span class="dot">·</span>
         <span>PYTHON</span><span class="dot">·</span>
         <span>C/C++</span><span class="dot">·</span>
+        <span>CADENCE</span><span class="dot">·</span>
+        <span>MUJOCO</span><span class="dot">·</span>
+        <span>ESP32</span><span class="dot">·</span>
+        <span>KICAD</span><span class="dot">·</span>
+        <span>MBED OS</span><span class="dot">·</span>
+        <span>AUTOMATION</span><span class="dot">·</span>
+        <span>SCADA</span><span class="dot">·</span>
+        <span>FIRMWARE</span><span class="dot">·</span>
+        <span>PCB DESIGN</span><span class="dot">·</span>
+        <span>SIMULATION</span><span class="dot">·</span>
         <span>HARDWARE</span><span class="dot">·</span>
-        <span>SOFTWARE</span><span class="dot">·</span>
+        <span>SYSTEMVERILOG</span><span class="dot">·</span>
         <span>EMBEDDED</span><span class="dot">·</span>
         <span>VLSI</span><span class="dot">·</span>
         <span>ROBOTICS</span><span class="dot">·</span>
@@ -86,24 +105,140 @@
         <span>TINYML</span><span class="dot">·</span>
         <span>PYTHON</span><span class="dot">·</span>
         <span>C/C++</span><span class="dot">·</span>
+        <span>CADENCE</span><span class="dot">·</span>
+        <span>MUJOCO</span><span class="dot">·</span>
+        <span>ESP32</span><span class="dot">·</span>
+        <span>KICAD</span><span class="dot">·</span>
+        <span>MBED OS</span><span class="dot">·</span>
+        <span>AUTOMATION</span><span class="dot">·</span>
+        <span>SCADA</span><span class="dot">·</span>
+        <span>FIRMWARE</span><span class="dot">·</span>
+        <span>PCB DESIGN</span><span class="dot">·</span>
+        <span>SIMULATION</span><span class="dot">·</span>
       </div>
     </div>
 
     <!-- About -->
     <section id="about">
       <div class="container">
-        <p class="about-text reveal">
-          I'm a Computer Engineering student at Georgia Tech who builds things
-          that actually run on hardware. RISC-V processors, embedded ML, robotic
-          game systems&mdash;I gravitate toward problems where software alone
-          isn't enough and the real constraint is physics.
-        </p>
-        <div class="stats reveal">
-          <div class="stat"><span class="stat-num">6+</span><span class="stat-label">Projects</span></div>
-          <div class="stat"><span class="stat-num">3</span><span class="stat-label">Internships</span></div>
+        <div class="about-layout">
+          <p class="about-text reveal">
+            I'm a Computer Engineering student at Georgia Tech who builds things
+            that actually run on hardware. RISC-V processors, embedded ML, robotic
+            game systems&mdash;I gravitate toward problems where software alone
+            isn't enough and the real constraint is physics.
+          </p>
+          <div class="stats reveal">
+            <div class="stat">
+              <span class="stat-num" data-target="8">0</span>
+              <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="3">0</span>
+              <span class="stat-label">Internships</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="10">0</span>
+              <span class="stat-label">Technologies</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- Parallax Divider: SKILLS -->
+    <div class="parallax-divider" data-speed="0.3">
+      <span class="divider-text">SKILLS</span>
+    </div>
+
+    <!-- Skills -->
+    <section id="skills">
+      <div class="container">
+        <h2 class="section-label reveal">Skills</h2>
+        <div class="skills-grid">
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Languages</h3>
+            <div class="skill-tags">
+              <span>C / C++</span>
+              <span>Python</span>
+              <span>SystemVerilog</span>
+              <span>VHDL</span>
+              <span>MIPS Assembly</span>
+              <span>MATLAB</span>
+              <span>Java</span>
+              <span>SQL</span>
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Digital Design &amp; VLSI</h3>
+            <div class="skill-tags">
+              <span>RISC-V Microarchitecture</span>
+              <span>Pipelining</span>
+              <span>Hazard Detection</span>
+              <span>Static Timing Analysis</span>
+              <span>Cadence Virtuoso</span>
+              <span>Synopsys</span>
+              <span>Quartus</span>
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Embedded &amp; Robotics</h3>
+            <div class="skill-tags">
+              <span>Mbed OS</span>
+              <span>Arduino</span>
+              <span>Edge Impulse / TinyML</span>
+              <span>MCUs</span>
+              <span>FPGAs</span>
+              <span>Raspberry Pi</span>
+              <span>Real-Time Acquisition</span>
+              <span>Sensor Integration</span>
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Industrial Automation</h3>
+            <div class="skill-tags">
+              <span>PLCs (Allen-Bradley)</span>
+              <span>Ladder Logic</span>
+              <span>Structured Text</span>
+              <span>SCADA</span>
+              <span>FactoryTalk</span>
+              <span>Ignition HMI</span>
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Hardware &amp; Tools</h3>
+            <div class="skill-tags">
+              <span>Schematic Capture</span>
+              <span>PCB Layout (KiCAD)</span>
+              <span>3D Modeling (Fusion 360)</span>
+              <span>Oscilloscopes</span>
+              <span>Logic Analyzers</span>
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <h3 class="skill-card-title">Collaboration</h3>
+            <div class="skill-tags">
+              <span>Technical Presentations</span>
+              <span>Design Proposals</span>
+              <span>Cross-Functional Teams</span>
+              <span>Agile</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Parallax Divider: WORK -->
+    <div class="parallax-divider" data-speed="0.4">
+      <span class="divider-text">WORK</span>
+    </div>
 
     <!-- Projects -->
     <section id="projects">
@@ -113,73 +248,84 @@
 
           <a href="https://github.com/chasebarclay1/systolic-array-multiplier"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#4f46e5" data-accent2="#7c3aed"
              data-desc="Parameterizable weight-stationary systolic array with saturated MAC operations and Built-In Self-Test.">
             <span class="project-num">01</span>
             <span class="project-name">Systolic Array</span>
-            <span class="project-desc">Parameterizable weight-stationary systolic array with saturated MAC operations and BIST.</span>
             <span class="project-tech">SystemVerilog</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
           <a href="https://github.com/chasebarclay1/SO-101-game-system"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#059669" data-accent2="#0d9488"
-             data-desc="Dual SO-101 robot arms playing chess with custom geometric IK solvers and MuJoCo simulation.">
+             data-desc="Dual SO-101 robot arms playing chess &amp; tic-tac-toe with custom geometric IK solvers and MuJoCo simulation.">
             <span class="project-num">02</span>
             <span class="project-name">Robot Game System</span>
-            <span class="project-desc">Dual SO-101 robot arms playing chess with custom geometric IK solvers and MuJoCo simulation.</span>
             <span class="project-tech">Python · MuJoCo</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
           <a href="https://github.com/chasebarclay1/focus-panel"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#d97706" data-accent2="#ea580c"
-             data-desc="ESP32-S3 productivity timer with 7.5″ e-paper display and NFC iOS Shortcuts lock integration.">
+             data-desc="ESP32-S3 WiFi Pomodoro timer with 7.5″ e-paper display and NFC-triggered iOS phone locking via Shortcuts.">
             <span class="project-num">03</span>
             <span class="project-name">Focus Panel</span>
-            <span class="project-desc">ESP32-S3 productivity timer with 7.5″ e-paper display and NFC iOS lock integration.</span>
             <span class="project-tech">C++ · ESP32 · E-Paper</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
           <a href="https://github.com/chasebarclay1"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#dc2626" data-accent2="#e11d48"
-             data-desc="Full RV32I processor — single-cycle to 5-stage pipelined microarchitecture maximizing IPC.">
+             data-desc="Full RV32I processor — single-cycle to 5-stage pipelined microarchitecture with forwarding and hazard detection.">
             <span class="project-num">04</span>
             <span class="project-name">RISC-V Processor</span>
-            <span class="project-desc">Full RV32I processor — single-cycle to 5-stage pipelined microarchitecture maximizing IPC.</span>
             <span class="project-tech">SystemVerilog RTL</span>
+            <span class="project-arrow">&rarr;</span>
+          </a>
+
+          <a href="https://github.com/chasebarclay1"
+             class="project-row reveal" target="_blank" rel="noopener"
+             data-desc="Full-custom 16-bit adder/subtractor in Cadence Virtuoso — schematic to GDSII, optimized for power &amp; delay targets.">
+            <span class="project-num">05</span>
+            <span class="project-name">16-bit Adder (VLSI)</span>
+            <span class="project-tech">Cadence Virtuoso</span>
+            <span class="project-arrow">&rarr;</span>
+          </a>
+
+          <a href="https://github.com/chasebarclay1"
+             class="project-row reveal" target="_blank" rel="noopener"
+             data-desc="Wordle-style game on Mbed OS in C — doubly linked list word storage, color LCD renderer, and joystick input with debouncing.">
+            <span class="project-num">06</span>
+            <span class="project-name">Embedded Wordle Game</span>
+            <span class="project-tech">C · Mbed OS</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
           <a href="https://github.com/chasebarclay1/gcd-hardware"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#2563eb" data-accent2="#3b82f6"
              data-desc="Parameterized Euclidean GCD in synthesizable SystemVerilog with full testbench verification.">
-            <span class="project-num">05</span>
+            <span class="project-num">07</span>
             <span class="project-name">GCD Hardware</span>
-            <span class="project-desc">Parameterized Euclidean GCD in synthesizable SystemVerilog with full testbench verification.</span>
             <span class="project-tech">SystemVerilog</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
           <a href="https://github.com/chasebarclay1"
              class="project-row reveal" target="_blank" rel="noopener"
-             data-accent1="#7c3aed" data-accent2="#9333ea"
-             data-desc="Full-custom design to GDSII layout optimized for minimum power under strict delay targets.">
-            <span class="project-num">06</span>
-            <span class="project-name">16-bit Adder</span>
-            <span class="project-desc">Full-custom design to GDSII layout optimized for minimum power under strict delay targets.</span>
-            <span class="project-tech">VLSI · Virtuoso</span>
+             data-desc="Automated a manual 1Zpresso grinder with a high-torque DC motor and custom 3D-printed coupling — saves 10 min/day.">
+            <span class="project-num">08</span>
+            <span class="project-name">Espresso Grinder Automation</span>
+            <span class="project-tech">Fusion 360 · Electronics</span>
             <span class="project-arrow">&rarr;</span>
           </a>
 
         </div>
       </div>
     </section>
+
+    <!-- Parallax Divider: EXPERIENCE -->
+    <div class="parallax-divider" data-speed="0.35">
+      <span class="divider-text">EXPERIENCE</span>
+    </div>
 
     <!-- Experience -->
     <section id="experience">
@@ -188,30 +334,117 @@
         <div class="exp-list">
 
           <div class="exp-row reveal">
-            <div class="exp-year">2025</div>
-            <div class="exp-info">
-              <h3>R&amp;D Engineering Intern</h3>
-              <p class="exp-company">Dig Robotics &mdash; Tel Aviv</p>
-              <p class="exp-desc">Real-time C++ data acquisition pipeline for IMU modules. Deployed TinyML models via Edge Impulse achieving &gt;90&percnt; classification accuracy.</p>
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <h3>R&amp;D Engineering Intern</h3>
+                <p class="exp-company">Dig Robotics &mdash; Tel Aviv, Israel</p>
+              </div>
+              <div class="exp-date">May – Jul 2025</div>
             </div>
+            <ul class="exp-bullets">
+              <li>Built a real-time C++ data acquisition pipeline for embedded IMU monitoring rigs with custom filtering and calibration.</li>
+              <li>Deployed a TinyML classification model via Edge Impulse achieving &gt;90% accuracy on complex heavy-machinery movement patterns.</li>
+              <li>Executed end-to-end field deployments — hardware install, data collection, and dataset annotation in noisy industrial environments.</li>
+            </ul>
           </div>
 
           <div class="exp-row reveal">
-            <div class="exp-year">2024</div>
-            <div class="exp-info">
-              <h3>Systems Engineering Co-op</h3>
-              <p class="exp-company">RoviSys &mdash; Georgia</p>
-              <p class="exp-desc">Architected automated PLC solutions for 4 industrial clients. Developed FactoryTalk SCADA data aggregation layers.</p>
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <h3>Systems Engineering Co-op</h3>
+                <p class="exp-company">RoviSys &mdash; Peachtree City, GA</p>
+              </div>
+              <div class="exp-date">May – Aug 2024</div>
             </div>
+            <ul class="exp-bullets">
+              <li>Delivered automation solutions across four client projects, programming Rockwell/Allen-Bradley PLCs with ladder logic and structured text.</li>
+              <li>Designed fault-handling logic and optimized control loops for deterministic response in critical manufacturing operations.</li>
+              <li>Gained hands-on SCADA experience with FactoryTalk and Ignition for data aggregation and HMI visualization.</li>
+            </ul>
           </div>
 
           <div class="exp-row reveal">
-            <div class="exp-year">2023</div>
-            <div class="exp-info">
-              <h3>Research Assistant</h3>
-              <p class="exp-company">Kennesaw State University</p>
-              <p class="exp-desc">Built Python testbed across 50+ Raspberry Pis simulating Wi-Fi 6E/5 interference for V2X reliability research.</p>
+            <div class="exp-header">
+              <div class="exp-header-left">
+                <h3>Research Assistant</h3>
+                <p class="exp-company">Kennesaw State University</p>
+              </div>
+              <div class="exp-date">Dec 2022 – Aug 2023</div>
             </div>
+            <ul class="exp-bullets">
+              <li>Developed Python code for a distributed network of 50+ Raspberry Pis creating a testbed to simulate Wi-Fi interference for emergency response research.</li>
+              <li>Analyzed coexistence between Wi-Fi 6E and Wi-Fi 5 in the 5.9 GHz band, quantifying latency and reliability impacts on V2X systems.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+      <div class="container">
+        <h2 class="section-label reveal">Education</h2>
+        <div class="edu-grid">
+
+          <div class="edu-card reveal">
+            <div class="edu-card-top">
+              <div>
+                <h3 class="edu-school">Georgia Institute of Technology</h3>
+                <p class="edu-degree">B.S. Computer Engineering</p>
+              </div>
+              <div class="edu-dates">Jan 2024 – May 2026</div>
+            </div>
+            <p class="edu-location">Atlanta, GA</p>
+            <p class="edu-courses-label">Relevant Coursework</p>
+            <p class="edu-courses">VLSI Design Theory to Tapeout · VLSI &amp; Advanced Digital Design · Embedded System Design · Intro to Automation &amp; Robotics · Architecture, Systems, Concurrency &amp; Energy in Computation · Feedback Control Systems · Signals and Systems</p>
+          </div>
+
+          <div class="edu-card reveal">
+            <div class="edu-card-top">
+              <div>
+                <h3 class="edu-school">Kennesaw State University</h3>
+                <p class="edu-degree">Computer Engineering Studies</p>
+              </div>
+              <div class="edu-dates">Aug 2021 – Dec 2023</div>
+            </div>
+            <p class="edu-location">Kennesaw, GA</p>
+            <p class="edu-courses-label">Relevant Coursework</p>
+            <p class="edu-courses">Programming for Hardware/Software Systems · Digital Design Laboratory · Intro to Computer Architecture</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership -->
+    <section id="leadership">
+      <div class="container">
+        <h2 class="section-label reveal">Leadership</h2>
+        <div class="lead-list">
+
+          <div class="lead-row reveal">
+            <div class="lead-info">
+              <h3>Education Chair</h3>
+              <p class="lead-org">Chabad on Campus &nbsp;·&nbsp; 2024 – 2025</p>
+            </div>
+            <p class="lead-desc">Organized weekly educational events for 20–100+ attendees, coordinating workshops, seminars, and guest speakers.</p>
+          </div>
+
+          <div class="lead-row reveal">
+            <div class="lead-info">
+              <h3>VP &amp; Programming Chair</h3>
+              <p class="lead-org">Hillel &nbsp;·&nbsp; 2022 – 2025</p>
+            </div>
+            <p class="lead-desc">Increased student engagement by 50% through large-scale events, including a campus-wide program with 300+ attendees.</p>
+          </div>
+
+          <div class="lead-row reveal">
+            <div class="lead-info">
+              <h3>Chapter President</h3>
+              <p class="lead-org">Alpha Epsilon Pi &nbsp;·&nbsp; 2022 – 2023</p>
+            </div>
+            <p class="lead-desc">Directed executive board operations, managed chapter finances, enforced safety policies, and represented chapter to international HQ.</p>
           </div>
 
         </div>
@@ -238,6 +471,6 @@
       <p>&copy; <span id="year"></span> Chase Barclay</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=10"></script>
   </body>
 </html>

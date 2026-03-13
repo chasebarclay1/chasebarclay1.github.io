@@ -1,86 +1,10 @@
 /* =====================================================
-   Chase Barclay Portfolio — Script
+   Chase Barclay Portfolio — Script v9
    ===================================================== */
 
 /* ── Year ── */
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-/* ── PCB Background ── */
-(function () {
-  const canvas = document.getElementById('pcb-bg');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  function mulberry32(seed) {
-    return function () {
-      seed |= 0;
-      seed = (seed + 0x6d2b79f5) | 0;
-      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  function draw() {
-    const W = (canvas.width = window.innerWidth);
-    const H = (canvas.height = window.innerHeight);
-    ctx.clearRect(0, 0, W, H);
-    const rng = mulberry32(0xdeadbeef);
-    const CELL = 56;
-    const COLS = Math.ceil(W / CELL) + 2;
-    const ROWS = Math.ceil(H / CELL) + 2;
-    const TRACE = 'rgba(130,165,195,0.10)';
-    const VIA = 'rgba(130,165,195,0.18)';
-    ctx.lineCap = 'round';
-
-    function via(x, y) {
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, Math.PI * 2);
-      ctx.fillStyle = VIA;
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#000';
-      ctx.fill();
-    }
-
-    function seg(x1, y1, x2, y2, w) {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = TRACE;
-      ctx.lineWidth = w;
-      ctx.stroke();
-    }
-
-    const count = Math.round(COLS * ROWS * 0.18);
-    for (let i = 0; i < count; i++) {
-      const col = Math.floor(rng() * COLS);
-      const row = Math.floor(rng() * ROWS);
-      const sx = col * CELL;
-      const sy = row * CELL;
-      const horiz = rng() > 0.5;
-      const len = Math.floor(rng() * 5) + 2;
-      const w = rng() > 0.55 ? 2.2 : 1.3;
-      const ex = sx + (horiz ? len * CELL : 0);
-      const ey = sy + (horiz ? 0 : len * CELL);
-      seg(sx, sy, ex, ey, w);
-      via(sx, sy);
-      via(ex, ey);
-      if (rng() < 0.4) {
-        const llen = Math.floor(rng() * 3) + 1;
-        const dir = rng() > 0.5 ? 1 : -1;
-        seg(ex, ey, ex + (horiz ? 0 : dir * llen * CELL), ey + (horiz ? dir * llen * CELL : 0), w);
-        via(ex + (horiz ? 0 : dir * llen * CELL), ey + (horiz ? dir * llen * CELL : 0));
-      }
-    }
-  }
-
-  draw();
-  let rt;
-  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(draw, 200); });
-})();
 
 /* ── Loader ── */
 (function () {
@@ -123,16 +47,29 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   })();
 
   // Hover expansion on interactive elements
-  document.querySelectorAll('a, button, .project-row').forEach((el) => {
+  document.querySelectorAll('a, button, .project-row, .skill-card, .exp-row, .lead-row').forEach((el) => {
     el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
   });
 })();
 
+/* ── Scroll Progress Bar ── */
+(function () {
+  const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  function update() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
 /* ── Hero Word Animation ── */
 function animateHero() {
   const lines = document.querySelectorAll('.hero-line .word');
-  const contactWords = document.querySelectorAll('.contact-heading .word');
   const portrait = document.getElementById('hero-portrait');
   let delay = 0;
 
@@ -142,18 +79,15 @@ function animateHero() {
     delay += 180;
   });
 
-  // Fade in portrait with the text
   if (portrait) setTimeout(() => portrait.classList.add('visible'), 120);
 
   delay += 120;
-  const heroMeta = document.querySelectorAll('.hero-meta .reveal');
+  const heroMeta = document.querySelectorAll('.hero-meta .reveal, .hero-scroll-hint.reveal');
   heroMeta.forEach((el) => {
     const d = delay;
     setTimeout(() => el.classList.add('visible'), d);
     delay += 100;
   });
-
-  // Contact words animate when scrolled into view (handled by observer)
 }
 
 /* ── Scroll Reveal ── */
@@ -162,14 +96,12 @@ function initReveal() {
     (entries) =>
       entries.forEach((e) => {
         if (e.isIntersecting) {
-          // Stagger siblings
           const parent = e.target.parentElement;
           const siblings = parent ? [...parent.querySelectorAll(':scope > .reveal')] : [];
           const idx = siblings.indexOf(e.target);
           const stagger = idx > 0 ? idx * 80 : 0;
           setTimeout(() => e.target.classList.add('visible'), stagger);
 
-          // Handle contact heading words
           if (e.target.closest('.contact-heading')) {
             e.target.querySelectorAll('.word').forEach((w, i) => {
               setTimeout(() => w.classList.add('in'), i * 150);
@@ -182,7 +114,7 @@ function initReveal() {
     { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
   );
 
-  document.querySelectorAll('.reveal:not(.hero-meta .reveal)').forEach((el) => obs.observe(el));
+  document.querySelectorAll('.reveal:not(.hero-meta .reveal):not(.hero-scroll-hint)').forEach((el) => obs.observe(el));
 
   // Contact heading words
   const contactH = document.querySelector('.contact-heading');
@@ -202,6 +134,38 @@ function initReveal() {
     );
     cObs.observe(contactH);
   }
+
+  // Count-up stats
+  const statNums = document.querySelectorAll('.stat-num[data-target]');
+  const countObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          countUp(e.target);
+          countObs.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+  statNums.forEach((el) => countObs.observe(el));
+}
+
+/* ── Count-Up Animation ── */
+function countUp(el) {
+  const target = parseInt(el.dataset.target, 10);
+  const duration = 1200;
+  const start = performance.now();
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target) + (progress < 1 ? '' : '+');
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.textContent = target + '+';
+  }
+  requestAnimationFrame(tick);
 }
 
 /* ── Project Hover Preview ── */
@@ -215,8 +179,8 @@ function initReveal() {
 
   (function track() {
     if (active) {
-      px += (tx - px) * 0.1;
-      py += (ty - py) * 0.1;
+      px += (tx - px) * 0.12;
+      py += (ty - py) * 0.12;
       preview.style.left = px + 'px';
       preview.style.top = py + 'px';
     }
@@ -225,9 +189,8 @@ function initReveal() {
 
   document.querySelectorAll('.project-row').forEach((row) => {
     row.addEventListener('mouseenter', () => {
-      const a1 = row.dataset.accent1 || '#333';
-      const a2 = row.dataset.accent2 || '#555';
-      preview.style.background = `linear-gradient(135deg, ${a1}, ${a2})`;
+      // Neutral dark gradient — no color accent
+      preview.style.background = `rgba(18,18,18,0.95)`;
       descEl.textContent = row.dataset.desc || '';
       preview.classList.add('active');
       active = true;
@@ -245,7 +208,29 @@ function initReveal() {
   });
 })();
 
-/* ── Parallax on scroll ── */
+/* ── 3D Tilt on Cards ── */
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  function applyTilt(el, maxX, maxY) {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      el.style.transform = `perspective(900px) rotateX(${-y * maxX}deg) rotateY(${x * maxY}deg)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg)`;
+    });
+  }
+
+  // Project rows: stronger tilt
+  document.querySelectorAll('.project-row').forEach((el) => applyTilt(el, 4, 6));
+  // Cards: subtle tilt
+  document.querySelectorAll('.skill-card, .exp-row, .edu-card, .lead-row').forEach((el) => applyTilt(el, 3, 4));
+})();
+
+/* ── Parallax on Hero Scroll ── */
 (function () {
   const hero = document.querySelector('.hero-content');
   if (!hero) return;
@@ -262,6 +247,31 @@ function initReveal() {
   );
 })();
 
+/* ── Parallax Dividers ── */
+(function () {
+  const dividers = document.querySelectorAll('.parallax-divider');
+  if (!dividers.length) return;
+
+  function updateDividers() {
+    dividers.forEach((div) => {
+      const text = div.querySelector('.divider-text');
+      if (!text) return;
+      const rect = div.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      // How far element center is from viewport center, normalized
+      const centerY = rect.top + rect.height / 2;
+      const relCenter = (centerY - viewH / 2) / viewH; // -0.5 to 0.5 roughly
+      const speed = parseFloat(div.dataset.speed) || 0.3;
+      const offset = relCenter * speed * 200;
+      text.style.transform = `translateX(${offset}px)`;
+    });
+  }
+
+  window.addEventListener('scroll', updateDividers, { passive: true });
+  window.addEventListener('resize', updateDividers);
+  updateDividers();
+})();
+
 /* ── Hero Text / Photo Clip-Path Inversion ── */
 (function () {
   const portrait = document.getElementById('hero-portrait');
@@ -275,21 +285,15 @@ function initReveal() {
     const cy = pr.top + pr.height / 2;
     const radius = pr.width / 2;
 
-    // CHASE inverted layer
     const cw = chaseInv.parentElement.getBoundingClientRect();
-    const chaseCP = `circle(${radius}px at ${cx - cw.left}px ${cy - cw.top}px)`;
-    chaseInv.style.clipPath = chaseCP;
+    chaseInv.style.clipPath = `circle(${radius}px at ${cx - cw.left}px ${cy - cw.top}px)`;
 
-    // BARCLAY inverted layer
     const bw = barclayInv.parentElement.getBoundingClientRect();
-    const barclayCP = `circle(${radius}px at ${cx - bw.left}px ${cy - bw.top}px)`;
-    barclayInv.style.clipPath = barclayCP;
+    barclayInv.style.clipPath = `circle(${radius}px at ${cx - bw.left}px ${cy - bw.top}px)`;
   }
 
-  // Run after layout settles
   window.addEventListener('load', () => requestAnimationFrame(updateClip));
   window.addEventListener('resize', updateClip);
-  // Also update during scroll since hero has parallax
   window.addEventListener('scroll', updateClip, { passive: true });
 })();
 
@@ -299,12 +303,9 @@ function initReveal() {
   const track = document.querySelector('.marquee-track');
   if (!marquee || !track) return;
 
-  let offset = 0;          // current translateX in px
-  let velocity = 0;        // px per frame driven by mouse
+  let offset = 0;
+  let velocity = 0;
   let isHovering = false;
-  let raf;
-
-  // Base auto-scroll speed (px/frame)
   const BASE_SPEED = 0.5;
 
   function getTrackHalf() {
@@ -317,35 +318,61 @@ function initReveal() {
     } else {
       offset += BASE_SPEED;
     }
-    // Wrap seamlessly at the halfway point
     const half = getTrackHalf();
     if (offset >= half) offset -= half;
     if (offset < 0) offset += half;
-
     track.style.transform = `translateX(${-offset}px)`;
-    raf = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   }
 
   marquee.addEventListener('mouseenter', () => {
     isHovering = true;
-    // Stop CSS animation, take over with JS
     track.style.animationPlayState = 'paused';
   });
 
   marquee.addEventListener('mouseleave', () => {
     isHovering = false;
-    track.style.animationPlayState = 'paused'; // keep JS in control
+    track.style.animationPlayState = 'paused';
   });
 
   marquee.addEventListener('mousemove', (e) => {
     const rect = marquee.getBoundingClientRect();
-    // Normalise mouse X: -1 (far left) → +1 (far right), 0 = center = pause
     const norm = (e.clientX - rect.left) / rect.width * 2 - 1;
-    // Max speed ~4px/frame
     velocity = norm * 4;
   });
 
-  // Kick off JS-driven loop immediately (replaces CSS animation)
   track.style.animation = 'none';
-  raf = requestAnimationFrame(tick);
+  requestAnimationFrame(tick);
+})();
+
+/* ── Section Label Text Scramble ── */
+(function () {
+  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—';
+
+  function scramble(el) {
+    const original = el.textContent.trim();
+    const len = original.length;
+    let frame = 0;
+    const totalFrames = 22;
+    const id = setInterval(() => {
+      el.textContent = original.split('').map((char, i) => {
+        if (char === ' ') return ' ';
+        if (frame / totalFrames >= i / len) return char;
+        return CHARS[Math.floor(Math.random() * CHARS.length)];
+      }).join('');
+      frame++;
+      if (frame > totalFrames) {
+        clearInterval(id);
+        el.textContent = original;
+      }
+    }, 38);
+  }
+
+  const obs = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { scramble(e.target); obs.unobserve(e.target); }
+    }),
+    { threshold: 0.8 }
+  );
+  document.querySelectorAll('.section-label').forEach((el) => obs.observe(el));
 })();
