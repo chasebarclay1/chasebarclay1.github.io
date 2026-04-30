@@ -8,10 +8,12 @@ import { createStage } from './scene/stage.js';
 import { startLoop } from './scene/loop.js';
 import { buildSO101 } from './scene/robots/so101.js';
 import { buildArgos } from './scene/robots/argos.js';
+import { ArmRig } from './scene/robots/arm-rig.js';
+import { ArgosRig } from './scene/robots/argos-rig.js';
+import { setupTimeline } from './scroll/timeline.js';
 
 /* ── 3D Stage ── */
 (function init3D() {
-  // Skip on touch devices and reduced-motion users (Phase 6 adds SVG fallback).
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (!window.WebGLRenderingContext) return;
@@ -19,24 +21,27 @@ import { buildArgos } from './scene/robots/argos.js';
   try {
     const stage = createStage();
 
-    // SO-101 — parked offscreen-right for now. Phase 5 slides it in
-    // during the projects section.
+    // SO-101 — parked offscreen-right; setupTimeline slides it in.
     const arm = buildSO101();
     arm.position.set(6, -2.5, 0);
     arm.rotation.y = -0.3;
     stage.scene.add(arm);
 
-    // Argos — parked bottom-left for now. Phase 5 walks it across
-    // the gutter as the user scrolls.
+    // Argos — sits in the bottom gutter; walks left↔right with scroll.
     const argos = buildArgos();
-    argos.position.set(-3.5, -2.6, 0);
-    argos.rotation.y = 0.4;
+    argos.position.set(-3.8, -2.6, 0);
+    argos.rotation.y = 0;
     stage.scene.add(argos);
 
-    // Expose for scroll choreography (Phase 5).
+    // Rig controllers — push to scene.userData.robots so loop.js ticks them.
+    const armRig = new ArmRig(arm);
+    const argosRig = new ArgosRig(argos);
+    stage.scene.userData.robots.push(armRig, argosRig);
+
     stage.robots = { arm, argos };
     window.__stage = stage; // dev hook
 
+    setupTimeline({ stage, armRig, argosRig });
     startLoop(stage);
   } catch (err) {
     console.warn('3D stage init failed:', err);
