@@ -10,11 +10,11 @@
 
 import { animate } from 'animejs';
 
-const ARM_PARK_X = 6;
-const ARM_ONSCREEN_X = 2.6;
+const ARM_PARK_X = 5;
+const ARM_ONSCREEN_X = 2.2;
 
-const ARGOS_LEFT_X = -3.8;
-const ARGOS_RIGHT_X = 3.8;
+const ARGOS_LEFT_X = -3.5;
+const ARGOS_RIGHT_X = 3.5;
 
 export function setupTimeline({ stage, armRig, argosRig }) {
   const arm = stage.robots.arm;

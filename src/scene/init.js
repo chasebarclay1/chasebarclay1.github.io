@@ -16,14 +16,18 @@ export async function init3D() {
   const stage = createStage();
 
   // SO-101 — parked offscreen-right; setupTimeline slides it in.
+  // Y=-0.8 keeps the base inside the visible frustum (±1.89 at z=0)
+  // and the gripper in the upper portion of the screen on neutral pose.
   const arm = buildSO101();
-  arm.position.set(6, -2.5, 0);
+  arm.position.set(5, -0.8, 0);
   arm.rotation.y = -0.3;
   stage.scene.add(arm);
 
   // Argos — sits in the bottom gutter; walks left↔right with scroll.
+  // Y=-1.4 lands the body box near the bottom edge while keeping the
+  // head visible.
   const argos = buildArgos();
-  argos.position.set(-3.8, -2.6, 0);
+  argos.position.set(-3.5, -1.4, 0);
   stage.scene.add(argos);
 
   // Rig controllers — pushed to scene.userData.robots so loop.js ticks them.
