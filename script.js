@@ -3,7 +3,7 @@
    Uses anime.js v4 from esm.sh (zero build for now).
    ===================================================== */
 
-import { animate, stagger, createTimeline } from 'https://esm.sh/animejs@4';
+import { animate, stagger } from 'https://esm.sh/animejs@4';
 
 /* ── Year ── */
 const yearEl = document.getElementById('year');
