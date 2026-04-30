@@ -1,6 +1,9 @@
 /* =====================================================
-   Chase Barclay Portfolio — Script v9
+   Chase Barclay Portfolio — Light Theme Script v1
+   Uses anime.js v4 from esm.sh (zero build for now).
    ===================================================== */
+
+import { animate, stagger, createTimeline } from 'https://esm.sh/animejs@4';
 
 /* ── Year ── */
 const yearEl = document.getElementById('year');
@@ -10,46 +13,13 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 (function () {
   const loader = document.getElementById('loader');
   if (!loader) return;
-
   requestAnimationFrame(() => loader.classList.add('filling'));
-
   window.addEventListener('load', () => {
     setTimeout(() => {
       loader.classList.add('hidden');
       animateHero();
       initReveal();
     }, 420);
-  });
-})();
-
-/* ── Cursor Glow & Dot ── */
-(function () {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-  const glow = document.getElementById('glow');
-  const dot = document.getElementById('cursor-dot');
-  if (!glow || !dot) return;
-
-  let mx = -800, my = -800, gx = -800, gy = -800;
-
-  document.addEventListener('mousemove', (e) => {
-    mx = e.clientX;
-    my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
-  });
-
-  (function loop() {
-    gx += (mx - gx) * 0.08;
-    gy += (my - gy) * 0.08;
-    glow.style.left = gx + 'px';
-    glow.style.top = gy + 'px';
-    requestAnimationFrame(loop);
-  })();
-
-  // Hover expansion on interactive elements
-  document.querySelectorAll('a, button, .project-row, .skill-card, .exp-row, .lead-row').forEach((el) => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
   });
 })();
 
@@ -67,26 +37,47 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
   update();
 })();
 
-/* ── Hero Word Animation ── */
+/* ── Navbar scrolled state (adds hairline divider) ── */
+(function () {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  function update() {
+    if (window.scrollY > 8) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ── Hero Word + Portrait Animation ── */
 function animateHero() {
   const lines = document.querySelectorAll('.hero-line .word');
   const portrait = document.getElementById('hero-portrait');
-  let delay = 0;
 
-  lines.forEach((w) => {
-    const d = delay;
-    setTimeout(() => w.classList.add('in'), d);
-    delay += 180;
+  // anime.js stagger gives us a clean per-word reveal that fights nothing.
+  animate(lines, {
+    opacity: [0, 1],
+    translateY: [20, 0],
+    delay: stagger(180),
+    duration: 900,
+    ease: 'outExpo',
+    onBegin: (anim) => {
+      anim.targets.forEach((el) => el.classList.add('in'));
+    },
   });
 
-  if (portrait) setTimeout(() => portrait.classList.add('visible'), 120);
+  if (portrait) {
+    setTimeout(() => portrait.classList.add('visible'), 120);
+  }
 
-  delay += 120;
   const heroMeta = document.querySelectorAll('.hero-meta .reveal, .hero-scroll-hint.reveal');
-  heroMeta.forEach((el) => {
-    const d = delay;
-    setTimeout(() => el.classList.add('visible'), d);
-    delay += 100;
+  animate(heroMeta, {
+    opacity: [0, 1],
+    translateY: [16, 0],
+    delay: stagger(100, { start: lines.length * 180 + 200 }),
+    duration: 800,
+    ease: 'outExpo',
+    onBegin: (anim) => anim.targets.forEach((el) => el.classList.add('visible')),
   });
 }
 
@@ -159,7 +150,6 @@ function countUp(el) {
   function tick(now) {
     const elapsed = now - start;
     const progress = Math.min(elapsed / duration, 1);
-    // Ease out
     const eased = 1 - Math.pow(1 - progress, 3);
     el.textContent = Math.floor(eased * target) + (progress < 1 ? '' : '+');
     if (progress < 1) requestAnimationFrame(tick);
@@ -189,8 +179,6 @@ function countUp(el) {
 
   document.querySelectorAll('.project-row').forEach((row) => {
     row.addEventListener('mouseenter', () => {
-      // Neutral dark gradient — no color accent
-      preview.style.background = `rgba(18,18,18,0.95)`;
       descEl.textContent = row.dataset.desc || '';
       preview.classList.add('active');
       active = true;
@@ -208,7 +196,7 @@ function countUp(el) {
   });
 })();
 
-/* ── 3D Tilt on Cards ── */
+/* ── Subtle 3D Tilt on Cards ── */
 (function () {
   if (window.matchMedia('(pointer: coarse)').matches) return;
 
@@ -224,10 +212,8 @@ function countUp(el) {
     });
   }
 
-  // Project rows: stronger tilt
-  document.querySelectorAll('.project-row').forEach((el) => applyTilt(el, 4, 6));
-  // Cards: subtle tilt
-  document.querySelectorAll('.skill-card, .exp-row, .edu-card, .lead-row').forEach((el) => applyTilt(el, 3, 4));
+  // Reduced from the dark-theme version — Apple aesthetic favors restraint.
+  document.querySelectorAll('.skill-card, .exp-row, .edu-card').forEach((el) => applyTilt(el, 1.5, 2));
 })();
 
 /* ── Parallax on Hero Scroll ── */
@@ -258,9 +244,8 @@ function countUp(el) {
       if (!text) return;
       const rect = div.getBoundingClientRect();
       const viewH = window.innerHeight;
-      // How far element center is from viewport center, normalized
       const centerY = rect.top + rect.height / 2;
-      const relCenter = (centerY - viewH / 2) / viewH; // -0.5 to 0.5 roughly
+      const relCenter = (centerY - viewH / 2) / viewH;
       const speed = parseFloat(div.dataset.speed) || 0.3;
       const offset = relCenter * speed * 200;
       text.style.transform = `translateX(${offset}px)`;
@@ -313,11 +298,8 @@ function countUp(el) {
   }
 
   function tick() {
-    if (isHovering) {
-      offset += velocity;
-    } else {
-      offset += BASE_SPEED;
-    }
+    if (isHovering) offset += velocity;
+    else offset += BASE_SPEED;
     const half = getTrackHalf();
     if (offset >= half) offset -= half;
     if (offset < 0) offset += half;
@@ -343,36 +325,4 @@ function countUp(el) {
 
   track.style.animation = 'none';
   requestAnimationFrame(tick);
-})();
-
-/* ── Section Label Text Scramble ── */
-(function () {
-  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—';
-
-  function scramble(el) {
-    const original = el.textContent.trim();
-    const len = original.length;
-    let frame = 0;
-    const totalFrames = 22;
-    const id = setInterval(() => {
-      el.textContent = original.split('').map((char, i) => {
-        if (char === ' ') return ' ';
-        if (frame / totalFrames >= i / len) return char;
-        return CHARS[Math.floor(Math.random() * CHARS.length)];
-      }).join('');
-      frame++;
-      if (frame > totalFrames) {
-        clearInterval(id);
-        el.textContent = original;
-      }
-    }, 38);
-  }
-
-  const obs = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      if (e.isIntersecting) { scramble(e.target); obs.unobserve(e.target); }
-    }),
-    { threshold: 0.8 }
-  );
-  document.querySelectorAll('.section-label').forEach((el) => obs.observe(el));
 })();
