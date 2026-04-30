@@ -58,8 +58,10 @@ export class ArmRig {
     for (const key in this.target) {
       this.current[key] += (this.target[key] - this.current[key]) * lerp;
     }
-    this.joints.shoulderPan.rotation.y = this.current.shoulderPan;
-    this.joints.shoulderLift.rotation.x = this.current.shoulderLift;
+    // Cursor-idle bias is added on top of the pose-driven rotation.
+    const bias = this.idleBias || { shoulderPan: 0, shoulderLift: 0 };
+    this.joints.shoulderPan.rotation.y = this.current.shoulderPan + bias.shoulderPan;
+    this.joints.shoulderLift.rotation.x = this.current.shoulderLift + bias.shoulderLift;
     this.joints.elbow.rotation.x = this.current.elbow;
     this.joints.wristFlex.rotation.x = this.current.wristFlex;
     this.joints.wristRoll.rotation.y = this.current.wristRoll;

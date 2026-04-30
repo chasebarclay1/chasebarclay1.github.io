@@ -4,47 +4,26 @@
 
 import './styles/main.css';
 import { animate, stagger } from 'animejs';
-import { createStage } from './scene/stage.js';
-import { startLoop } from './scene/loop.js';
-import { buildSO101 } from './scene/robots/so101.js';
-import { buildArgos } from './scene/robots/argos.js';
-import { ArmRig } from './scene/robots/arm-rig.js';
-import { ArgosRig } from './scene/robots/argos-rig.js';
-import { setupTimeline } from './scroll/timeline.js';
 
-/* ── 3D Stage ── */
-(function init3D() {
+/* ── 3D Stage (lazy-loaded) ──
+ * Skip three.js + scene code on touch, reduced-motion, no-WebGL clients.
+ * For everyone else, defer the import to idle time so the hero paints
+ * before the ~140 KB chunk lands. */
+(function maybeInit3D() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (!window.WebGLRenderingContext) return;
 
-  try {
-    const stage = createStage();
+  const start = () => {
+    import('./scene/init.js')
+      .then((m) => m.init3D())
+      .catch((err) => console.warn('3D stage init failed:', err));
+  };
 
-    // SO-101 — parked offscreen-right; setupTimeline slides it in.
-    const arm = buildSO101();
-    arm.position.set(6, -2.5, 0);
-    arm.rotation.y = -0.3;
-    stage.scene.add(arm);
-
-    // Argos — sits in the bottom gutter; walks left↔right with scroll.
-    const argos = buildArgos();
-    argos.position.set(-3.8, -2.6, 0);
-    argos.rotation.y = 0;
-    stage.scene.add(argos);
-
-    // Rig controllers — push to scene.userData.robots so loop.js ticks them.
-    const armRig = new ArmRig(arm);
-    const argosRig = new ArgosRig(argos);
-    stage.scene.userData.robots.push(armRig, argosRig);
-
-    stage.robots = { arm, argos };
-    window.__stage = stage; // dev hook
-
-    setupTimeline({ stage, armRig, argosRig });
-    startLoop(stage);
-  } catch (err) {
-    console.warn('3D stage init failed:', err);
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(start, { timeout: 1500 });
+  } else {
+    setTimeout(start, 600);
   }
 })();
 

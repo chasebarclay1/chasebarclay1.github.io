@@ -65,8 +65,9 @@ export class ArgosRig {
       this.root.position.y += (this.baseY - this.root.position.y) * 0.1;
     }
 
-    // Smooth turn toward target heading.
-    const rotDiff = this._targetRotY - this.root.rotation.y;
+    // Smooth turn toward target heading + cursor-idle bias.
+    const targetY = this._targetRotY + (this.idleBiasY || 0);
+    const rotDiff = targetY - this.root.rotation.y;
     this.root.rotation.y += rotDiff * 0.08;
   }
 }
