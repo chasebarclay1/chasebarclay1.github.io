@@ -20,9 +20,9 @@
   /* Lines + accent */
   --hairline: #D2D2D7;
   --hairline-strong: #BDBDC2;
-  --accent: #0066CC;
-  --accent-hover: #0077ED;
-  --accent-soft: #E8F0FE;
+  --accent: #4F5B3F;
+  --accent-hover: #5C6B4A;
+  --accent-soft: #EEF1E6;
 
   /* Robots (used by 3D canvas later) */
   --robot: #B0B5BD;
@@ -333,38 +333,38 @@ h1, h2, h3, h4 { font-family: var(--font-h); }
 }
 
 /* ─────────────────────────────────────
-   Marquee (muted grey on white)
+   Tagline ticker (single subtle line)
 ───────────────────────────────────── */
-.marquee {
+.tagline-ticker {
   overflow: hidden;
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
-  padding: 1.4rem 0;
+  padding: 1rem 0;
   white-space: nowrap;
   background: var(--surface);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
 
-.marquee-track {
+.tagline-track {
   display: inline-flex;
-  gap: 2.5rem;
-  animation: scroll-marquee 50s linear infinite;
+  gap: 2.25rem;
+  animation: tagline-scroll 80s linear infinite;
   width: max-content;
 }
 
-.marquee-track span {
+.tagline-track span {
   font-family: var(--font-h);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   color: var(--text-muted);
   text-transform: uppercase;
 }
 
-.marquee-track .dot { color: var(--hairline-strong); }
+.tagline-track .dot { color: var(--hairline-strong); }
 
-@keyframes scroll-marquee {
+@keyframes tagline-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }

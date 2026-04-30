@@ -282,47 +282,4 @@ function countUp(el) {
   window.addEventListener('scroll', updateClip, { passive: true });
 })();
 
-/* ── Marquee Mouse Scrub ── */
-(function () {
-  const marquee = document.querySelector('.marquee');
-  const track = document.querySelector('.marquee-track');
-  if (!marquee || !track) return;
-
-  let offset = 0;
-  let velocity = 0;
-  let isHovering = false;
-  const BASE_SPEED = 0.5;
-
-  function getTrackHalf() {
-    return track.scrollWidth / 2;
-  }
-
-  function tick() {
-    if (isHovering) offset += velocity;
-    else offset += BASE_SPEED;
-    const half = getTrackHalf();
-    if (offset >= half) offset -= half;
-    if (offset < 0) offset += half;
-    track.style.transform = `translateX(${-offset}px)`;
-    requestAnimationFrame(tick);
-  }
-
-  marquee.addEventListener('mouseenter', () => {
-    isHovering = true;
-    track.style.animationPlayState = 'paused';
-  });
-
-  marquee.addEventListener('mouseleave', () => {
-    isHovering = false;
-    track.style.animationPlayState = 'paused';
-  });
-
-  marquee.addEventListener('mousemove', (e) => {
-    const rect = marquee.getBoundingClientRect();
-    const norm = (e.clientX - rect.left) / rect.width * 2 - 1;
-    velocity = norm * 4;
-  });
-
-  track.style.animation = 'none';
-  requestAnimationFrame(tick);
-})();
+/* Tagline ticker is purely CSS-driven (animation: tagline-scroll). No JS. */
