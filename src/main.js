@@ -1,9 +1,9 @@
 /* =====================================================
    Chase Barclay Portfolio — Light Theme Script v1
-   Uses anime.js v4 from esm.sh (zero build for now).
    ===================================================== */
 
-import { animate, stagger } from 'https://esm.sh/animejs@4';
+import './styles/main.css';
+import { animate, stagger } from 'animejs';
 
 /* ── Year ── */
 const yearEl = document.getElementById('year');
