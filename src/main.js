@@ -6,18 +6,37 @@ import './styles/main.css';
 import { animate, stagger } from 'animejs';
 import { createStage } from './scene/stage.js';
 import { startLoop } from './scene/loop.js';
-import { addCanary } from './scene/canary.js';
+import { buildSO101 } from './scene/robots/so101.js';
+import { buildArgos } from './scene/robots/argos.js';
 
-/* ── 3D Stage (Phase 3) ── */
+/* ── 3D Stage ── */
 (function init3D() {
-  // Skip on touch devices and reduced-motion users (Phase 6 will add SVG fallback).
+  // Skip on touch devices and reduced-motion users (Phase 6 adds SVG fallback).
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (!window.WebGLRenderingContext) return;
 
   try {
     const stage = createStage();
-    addCanary(stage.scene); // remove in Phase 4
+
+    // SO-101 — parked offscreen-right for now. Phase 5 slides it in
+    // during the projects section.
+    const arm = buildSO101();
+    arm.position.set(6, -2.5, 0);
+    arm.rotation.y = -0.3;
+    stage.scene.add(arm);
+
+    // Argos — parked bottom-left for now. Phase 5 walks it across
+    // the gutter as the user scrolls.
+    const argos = buildArgos();
+    argos.position.set(-3.5, -2.6, 0);
+    argos.rotation.y = 0.4;
+    stage.scene.add(argos);
+
+    // Expose for scroll choreography (Phase 5).
+    stage.robots = { arm, argos };
+    window.__stage = stage; // dev hook
+
     startLoop(stage);
   } catch (err) {
     console.warn('3D stage init failed:', err);
