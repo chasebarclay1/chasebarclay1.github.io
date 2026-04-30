@@ -22,7 +22,7 @@ export function setupTimeline({ stage, armRig, argosRig }) {
 
   /* ── Arm enter/exit on the projects section ── */
   const projectsSection = document.getElementById('projects');
-  if (projectsSection) {
+  if (projectsSection && arm && armRig) {
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -49,7 +49,7 @@ export function setupTimeline({ stage, armRig, argosRig }) {
    * Pick the pose closest to where the row sits on screen. The active row
    * is whichever .project-row is closest to the viewport center. */
   const rows = [...document.querySelectorAll('.project-row')];
-  if (rows.length) {
+  if (rows.length && armRig) {
     function pickActiveRow() {
       const cy = window.innerHeight / 2;
       let best = null;
@@ -83,7 +83,7 @@ export function setupTimeline({ stage, armRig, argosRig }) {
   /* ── Argos walk: position from scroll progress, speed from scroll velocity ── */
   const heroSection = document.getElementById('hero');
   const contactSection = document.getElementById('contact');
-  if (heroSection && contactSection) {
+  if (heroSection && contactSection && argos && argosRig) {
     let lastY = window.scrollY;
     let velocity = 0;
     let velocityFadeRaf = null;

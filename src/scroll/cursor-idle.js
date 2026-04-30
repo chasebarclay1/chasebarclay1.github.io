@@ -34,19 +34,16 @@ export function startCursorIdle({ armRig, argosRig }) {
       const nx = (mouseX / window.innerWidth) * 2 - 1;   // -1..+1
       const ny = (mouseY / window.innerHeight) * 2 - 1;  // -1..+1
 
-      // Arm: nudge shoulderPan toward cursor X. The rig's tick() already
-      // lerps toward target poses, so write the bias as a delta on the
-      // joint after the rig has updated.
-      armRig.idleBias = {
-        shoulderPan: nx * ARM_PAN_BIAS * idleAmount,
-        shoulderLift: ny * 0.15 * idleAmount,
-      };
-
-      // Argos: gentle body yaw toward cursor X.
-      argosRig.idleBiasY = -nx * ARGOS_BODY_BIAS * idleAmount;
+      if (armRig) {
+        armRig.idleBias = {
+          shoulder_pan: nx * ARM_PAN_BIAS * idleAmount,
+          shoulder_lift: ny * 0.15 * idleAmount,
+        };
+      }
+      if (argosRig) argosRig.idleBiasY = -nx * ARGOS_BODY_BIAS * idleAmount;
     } else {
-      armRig.idleBias = null;
-      argosRig.idleBiasY = 0;
+      if (armRig) armRig.idleBias = null;
+      if (argosRig) argosRig.idleBiasY = 0;
     }
     requestAnimationFrame(tick);
   }
