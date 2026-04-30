@@ -4,6 +4,25 @@
 
 import './styles/main.css';
 import { animate, stagger } from 'animejs';
+import { createStage } from './scene/stage.js';
+import { startLoop } from './scene/loop.js';
+import { addCanary } from './scene/canary.js';
+
+/* ── 3D Stage (Phase 3) ── */
+(function init3D() {
+  // Skip on touch devices and reduced-motion users (Phase 6 will add SVG fallback).
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.WebGLRenderingContext) return;
+
+  try {
+    const stage = createStage();
+    addCanary(stage.scene); // remove in Phase 4
+    startLoop(stage);
+  } catch (err) {
+    console.warn('3D stage init failed:', err);
+  }
+})();
 
 /* ── Year ── */
 const yearEl = document.getElementById('year');
