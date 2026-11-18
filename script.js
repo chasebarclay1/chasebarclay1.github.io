@@ -1,5 +1,5 @@
 /* =====================================================
-   Chase Barclay — Portfolio v20
+   Chase Barclay — Portfolio v21
    ===================================================== */
 
 (function () {
@@ -90,7 +90,10 @@
   /* ── Nav: current section ── */
   const navLinks = [...document.querySelectorAll('.nav-links a')];
   const linkFor = {};
-  navLinks.forEach((a) => (linkFor[a.getAttribute('href').slice(1)] = a));
+  navLinks.forEach((a) => {
+    const href = a.getAttribute('href');
+    if (href.startsWith('#')) linkFor[href.slice(1)] = a;
+  });
   const sections = [...document.querySelectorAll('main section[id]')];
   let activeLink = null;
 
@@ -201,6 +204,52 @@
   }
   const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
   Promise.race([fontsReady, new Promise((r) => setTimeout(r, 1200))]).then(start);
+
+  /* ── Chess video: plays while on screen, with a pause button ── */
+  const video = document.getElementById('chess-video');
+  const vToggle = document.querySelector('.video-toggle');
+  if (video && vToggle) {
+    let userPaused = reduceMotion; // reduced motion: start paused, play only on request
+    function setPausedUI(paused) {
+      vToggle.classList.toggle('paused', paused);
+      vToggle.setAttribute('aria-label', paused ? 'Play video' : 'Pause video');
+      vToggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    }
+    setPausedUI(true);
+    video.addEventListener('play', () => setPausedUI(false));
+    video.addEventListener('pause', () => setPausedUI(true));
+    vToggle.addEventListener('click', () => {
+      if (video.paused) { userPaused = false; video.play().catch(() => {}); }
+      else { userPaused = true; video.pause(); }
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && !userPaused) video.play().catch(() => {});
+          if (!e.isIntersecting && !video.paused) video.pause();
+        });
+      }, { threshold: 0.4 }).observe(video);
+    }
+  }
+
+  /* ── Photo strip buttons ── */
+  const strip = document.getElementById('photos');
+  const photoBtns = [...document.querySelectorAll('.photo-btn')];
+  if (strip && photoBtns.length) {
+    function updateBtns() {
+      const max = strip.scrollWidth - strip.clientWidth - 2;
+      photoBtns.forEach((b) => {
+        b.disabled = b.dataset.dir === '-1' ? strip.scrollLeft <= 2 : strip.scrollLeft >= max;
+      });
+    }
+    photoBtns.forEach((b) => b.addEventListener('click', () => {
+      strip.scrollBy({ left: Number(b.dataset.dir) * strip.clientWidth * 0.6, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }));
+    strip.addEventListener('scroll', () => requestAnimationFrame(updateBtns), { passive: true });
+    window.addEventListener('resize', updateBtns);
+    window.addEventListener('load', updateBtns);
+    updateBtns();
+  }
 
   /* ── Copy email ── */
   const copyBtn = document.getElementById('copy-email');

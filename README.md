@@ -1,8 +1,18 @@
 # Chase Barclay — Portfolio Website
 
-Personal portfolio for Chase Barclay, controls engineer at FORTNA and Georgia Tech Computer Engineering grad (2026).
+Personal site for Chase Barclay, controls engineer at FORTNA and Georgia Tech Computer Engineering grad (2026). It shows the work; the resume PDF has the full history.
 
 Live at `https://chasebarclay1.github.io/`
+
+## Layout
+
+Hero (with resume download) → tagline → Work (Argos and the chess robot arms, with photo, video and poster) → Now (FORTNA) → Earlier work → About (with photo strip) → Contact.
+
+## Files
+
+- `files/Chase_Barclay_Resume.pdf` is the public one page resume (no phone number). Replace it to update the download.
+- `files/Argos_Poster.pdf` is the senior design poster.
+- `assets/` holds the web sized photos (location data stripped), the Argos expo photo, and the chess robot loop (`chess-loop.mp4`, 11 s at 2x speed, muted).
 
 ## Stack
 
@@ -30,6 +40,8 @@ Plain HTML, CSS and JavaScript. No frameworks, no build step.
 
 - Hero elements rise in on load
 - A tagline lights up word by word as it scrolls past
+- The chess robot video plays only while on screen, with a pause button (paused by default with reduce motion on)
+- The photo strip scrolls sideways, with previous and next buttons on desktop
 - Sections rise and fade in once as they enter the viewport
 - The rail on the left fills with orange as you scroll, and each section's node lights up when reached
 - The mobile menu opens as a full height panel with links stepping in
